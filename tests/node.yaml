@@ -1,0 +1,10 @@
+config:
+  environments:
+    local:
+      target: "http://192.168.49.2:31000"
+      phases:
+        - duration: 300
+          arrivalRate: 50
+scenarios:
+  - flow:
+    - log: "Current environment is set to: {{ $environment }}"
