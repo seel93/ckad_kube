@@ -23,10 +23,10 @@ jobs:
       run: |
         export SHELL=/bin/bash
         eval $(minikube -p minikube docker-env)
-        pwd
-        ls
-        docker build -f ./python_flask/Dockerfile -t starwars-node .
-        docker build -f ./express_server/Dockerfile -t python-flask .
+        cd python_flask
+        docker build -t starwars-node .
+        cd ../express_server
+        docker -t python-flask .
         echo -n "verifying images:"
         docker images        
         helm -v
