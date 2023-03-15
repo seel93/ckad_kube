@@ -27,8 +27,7 @@ jobs:
         docker build -t python-flask .
     - name: Build another image
       run: |
-        pwd
-        cd ../express_server
+        cd express_server
         docker build -t starwars-node .
     - name: List images
       run: docker images
