@@ -24,12 +24,13 @@ jobs:
         export SHELL=/bin/bash
         eval $(minikube -p minikube docker-env)
         cd python_flask
-        docker build -t starwars-node .
-        cd ../express_server
         docker -t python-flask .
-        echo -n "verifying images:"
-        docker images        
-        helm -v
+    - name: Build another image
+      run: |
+        cd ../express_server
+        docker build -t starwars-node .
+    - name: List images
+      run: docker images
     - name: Deploy to minikube
       run:
         kubectl apply -f deploy-to-minikube.yaml
