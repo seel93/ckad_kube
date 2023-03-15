@@ -24,9 +24,10 @@ jobs:
         export SHELL=/bin/bash
         eval $(minikube -p minikube docker-env)
         cd python_flask
-        docker -t python-flask .
+        docker build -t python-flask .
     - name: Build another image
       run: |
+        pwd
         cd ../express_server
         docker build -t starwars-node .
     - name: List images
