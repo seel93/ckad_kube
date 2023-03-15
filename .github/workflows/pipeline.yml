@@ -39,9 +39,6 @@ jobs:
 
     - name: Deploy to node app
       run: |
-        pwd
-        ls
-        cd ..
         kubectl apply -f sw-deployment.yml
     
     - name: Deploy to flask app
