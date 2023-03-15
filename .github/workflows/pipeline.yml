@@ -25,9 +25,11 @@ jobs:
         eval $(minikube -p minikube docker-env)
         pwd
         ls
-        docker build -f ./Dockerfile -t local/example .
+        docker build -f ./python_flask/Dockerfile -t starwars-node .
+        docker build -f ./express_server/Dockerfile -t python-flask .
         echo -n "verifying images:"
         docker images        
+        helm -v
     - name: Deploy to minikube
       run:
         kubectl apply -f deploy-to-minikube.yaml
