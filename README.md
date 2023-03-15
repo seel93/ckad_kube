@@ -1,0 +1,101 @@
+# Kubernetes init project
+
+## Setup
+
+### Cluster:
+
+Init:
+```bash
+minikube start
+```
+
+Dashboard:
+
+```bash
+minikube dashboard
+```
+
+### Deployments:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: some-name-deployment
+spec:
+  selector:
+    matchLabels:
+      app: some-name
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: some-name
+    spec:
+      containers:
+        - name: some-name
+          image: some-name
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: Never
+```
+<hr>
+
+
+### Service
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: some-service
+spec:
+  selector:
+    app: some-app
+  type: LoadBalancer 
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 32000
+```
+
+### Outputs:
+
+Get url 
+
+```bash
+minikube service <service_name> --url
+```
+
+### CI/CD:
+
+<b>Updating image: </b>
+
+run: 
+```
+eval (minikube docker-env)
+```
+
+and: 
+```
+docker build -t <img_name> .
+```
+
+### Cleanup:
+Resetting the entire cluster:
+
+```
+minikube delete
+```
+
+### Observability:
+
+<b> Sources: </b>
+- prometheus
+- grafana
+- loki
+
+
+Current [resource](https://brain2life.hashnode.dev/prometheus-and-grafana-setup-in-minikube#heading-reference)
+
+# ckad_kube
