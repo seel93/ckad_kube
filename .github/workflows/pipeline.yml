@@ -53,6 +53,7 @@ jobs:
     - name: Test service URLs
       run: |
         node_server=$(minikube service sw-service --url)
+        echo $node_server
         curl $node_server
         python_server=$(minikube service py-service --url)
         curl $python_server
