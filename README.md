@@ -96,6 +96,7 @@ minikube delete
 - loki
 
 
-Current [resource](https://brain2life.hashnode.dev/prometheus-and-grafana-setup-in-minikube#heading-reference)
+Current [resource for prometheus and grafana](https://brain2life.hashnode.dev/prometheus-and-grafana-setup-in-minikube#heading-reference)
 
-# ckad_kube
+Current [resource for grafana and loki](https://medium.com/codex/setup-grafana-loki-on-local-k8s-cluster-minikube-90450e9896a8)
+

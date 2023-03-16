@@ -46,7 +46,7 @@ jobs:
 
     - name: Test service URLs
       run: |
-        minikube service list
-        minikube service example --url
-        echo "------------------opening the service------------------"
-        curl $(minikube service example --url)  
+        node_server=$(minikube service sw-service --url)
+        curl $node_server
+        python_server=$(minikube service py-service --url)
+        curl $python_server
