@@ -44,6 +44,12 @@ jobs:
     - name: Deploy to flask app
       run: kubectl apply -f py-deployment.yml
 
+    - name: Create node service
+      run: kubectl apply -f sw-service.yml
+
+    - name: Create python service
+      run: kubectl apply -f py-service.yml
+
     - name: Test service URLs
       run: |
         node_server=$(minikube service sw-service --url)
