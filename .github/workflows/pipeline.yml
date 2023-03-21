@@ -47,5 +47,7 @@ jobs:
 
     - name: Test service URLs
       run: |
+        minikube service sw-service --url
         curl $(minikube service sw-service --url)
+        minikube service py-service --url
         curl $(minikube service py-service --url)
