@@ -38,7 +38,7 @@ jobs:
           context: python_flask
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/python-flask:latest
-  job1:
+  Minikube:
     runs-on: ubuntu-latest
     name: deploy services to minikube
     steps:
@@ -49,18 +49,6 @@ jobs:
 
     - name: Try the cluster !
       run: kubectl get pods -A
-
-    - name: Build image
-      run: |
-        export SHELL=/bin/bash
-        eval $(minikube -p minikube docker-env)
-        cd python_flask
-        docker build -t python-flask .
-
-    - name: Build another image
-      run: |
-        cd express_server
-        docker build -t starwars-node .
 
     - name: List images
       run: docker images
