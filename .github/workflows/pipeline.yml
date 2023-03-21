@@ -28,9 +28,16 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
+          context: express_server
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/starwars-node:latest
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
           context: python_flask
           push: true
-          tags: user/app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python-flask:latest
   job1:
     runs-on: ubuntu-latest
     name: deploy services to minikube
