@@ -22,7 +22,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          file: ./express_server/Dockerfile
+          file: ./python_flask/Dockerfile
           push: true
           tags: user/app:latest
   job1:
