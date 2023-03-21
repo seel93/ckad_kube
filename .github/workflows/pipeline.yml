@@ -1,10 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
@@ -12,7 +7,7 @@ on:
 jobs:
   job1:
     runs-on: ubuntu-latest
-    name: build example and deploy to minikube
+    name: deploy services to minikube
     steps:
     - uses: actions/checkout@v2
 
@@ -52,8 +47,5 @@ jobs:
 
     - name: Test service URLs
       run: |
-        node_server=$(minikube service sw-service --url)
-        echo $node_server
-        curl $node_server
-        python_server=$(minikube service py-service --url)
-        curl $python_server
+        curl $(minikube service sw-service --url)
+        curl $(minikube service py-service --url)

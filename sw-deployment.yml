@@ -18,3 +18,10 @@ spec:
           ports:
             - containerPort: 3000
           imagePullPolicy: Never
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
