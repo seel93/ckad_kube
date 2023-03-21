@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: star-wars
-          image: starwars-node
+          image: steingrim/starwars-node:latest
           ports:
             - containerPort: 3000
           imagePullPolicy: Never
