@@ -17,7 +17,6 @@ spec:
           image: steingrim/python-flask:latest
           ports:
             - containerPort: 5000
-          imagePullPolicy: Never
           resources:
             requests:
               memory: "64Mi"

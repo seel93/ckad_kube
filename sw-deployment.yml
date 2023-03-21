@@ -13,11 +13,10 @@ spec:
         app: star-wars
     spec:
       containers:
-        - name: star-wars
+        - name: starwars-node
           image: steingrim/starwars-node:latest
           ports:
             - containerPort: 3000
-          imagePullPolicy: Never
           resources:
             requests:
               memory: "64Mi"

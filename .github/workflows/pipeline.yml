@@ -58,7 +58,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: List images
-      run: docker images
+      run:  |
+        docker pull steingrim/starwars-node
+        docker pull steingrim/python-flask
+        docker images
 
     - name: Deploy to node app
       run: |
