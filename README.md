@@ -64,6 +64,7 @@ spec:
 Get url 
 
 ```bash
+k get service
 minikube service <service_name> --url
 ```
 
@@ -95,8 +96,11 @@ minikube delete
 - grafana
 - loki
 
-
 Current [resource for prometheus and grafana](https://brain2life.hashnode.dev/prometheus-and-grafana-setup-in-minikube#heading-reference)
-
 Current [resource for grafana and loki](https://medium.com/codex/setup-grafana-loki-on-local-k8s-cluster-minikube-90450e9896a8)
+
+### Kafka:
+Current [resource](https://redhat-developer-demos.github.io/kafka-tutorial/kafka-tutorial/1.0.x/07-kubernetes.html)
+
+
 
