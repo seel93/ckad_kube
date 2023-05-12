@@ -1,4 +1,5 @@
 const express = require('express');
+const mysql = require('mysql2');
 const { uniqueNamesGenerator, starWars } = require('unique-names-generator'); const app = express();// Get maximum character from ENVs else return 5 character
 const MAX_STAR_WARS_CHARACTERS = process.env.MAX_STAR_WARS_CHARACTERS || 5; const config = {
   dictionaries: [starWars]
@@ -47,6 +48,33 @@ app.get('/metrics', (req, res) => {
   res.set('Content-Type', client.register.contentType);
   res.send(client.register.metrics());
 })
+
+
+app.get('/query', (req, res) => {
+
+  const pool = mysql.createPool({
+    host: 'mysql',
+    user: 'root',
+    password: 'mysecretpassword',
+    database: 'mydatabase'
+  });
+  
+  try {
+    pool.query('SELECT * FROM customers', (err, results, fields) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+  
+      console.log(results);
+      res.json(results);
+    });
+  } catch (err) {
+    console.error(err);
+    res.json("results");
+  }
+}); 
+
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');

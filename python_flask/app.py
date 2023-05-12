@@ -1,6 +1,7 @@
 from flask import Flask
 from logging.config import dictConfig
 import mysql.connector
+from pymongo import MongoClient
 
 config = {
     'user': 'root',
@@ -44,7 +45,6 @@ dictConfig({
 app = Flask(__name__)
 
 
-
 @app.route('/')
 def hello_geek():
     app.logger.info("request has been made")
@@ -57,21 +57,114 @@ def test_endpoint():
     return '<h1>This is another endpoint </h2>'
 
 
-
 @app.route('/health')
 def db_health_check():
     try:
         cnx = mysql.connector.connect(**config)
         cursor = cnx.cursor()
-        cursor.execute("SELECT 1")
-        result = cursor.fetchone()
-        if result[0] == 1:
-            return "Database is healthy"
+        create_table = """
+            CREATE TABLE IF NOT EXISTS customers (
+                id INT PRIMARY KEY,
+                first_name VARCHAR(50),
+                last_name VARCHAR(50),
+                email VARCHAR(100)
+            )
+        """
+
+        # Execute the SQL statement
+        cursor.execute(create_table)
+
+        # Commit the changes to the database
+        cnx.commit()
+
+        # Close the cursor and connection
         cursor.close()
         cnx.close()
+        return "Query complete"
     except mysql.connector.Error as err:
         return "Database is not healthy: {}".format(err)
-    return "Unknown error"
+
+
+
+@app.route('/query')
+def get_customer_by_id():
+    # Establish a connection to the MySQL server
+    cnx = mysql.connector.connect(**config)
+
+    # Create a cursor object
+    cursor = cnx.cursor()
+
+    # Define the SQL statement
+    query = "SELECT * FROM customers"
+
+    # Execute the SQL statement with the customer_id parameter
+    cursor.execute(query)
+
+    # Fetch the result
+    result = cursor.fetchone()
+
+    # Close the cursor and connection
+    cursor.close()
+    cnx.close()
+
+    # Return the result
+    return str(result)
+
+
+@app.route('/mongo')
+def create_collection():
+    # Create a MongoClient instance
+    client = MongoClient('mongodb://mongodb:27017')
+
+
+    # Access the database
+    db = client["my_db"]
+
+    # Create a collection
+    collection = db["users"]
+
+
+    documents = [
+        {"name": "Jane", "age": 25, "email": "jane@example.com"},
+        {"name": "Bob", "age": 35, "email": "bob@example.com"},
+        {"name": "Alice", "age": 40, "email": "alice@example.com"}
+    ]
+
+    # Insert the documents into the collection
+    if isinstance(documents, dict):
+        # Insert a single document
+        result = collection.insert_one(documents)
+        app.logger.info("Inserted document with ID:", result.inserted_id)
+    elif isinstance(documents, list):
+        # Insert multiple documents
+        result = collection.insert_many(documents)
+        app.logger.info("Inserted", len(result.inserted_ids), "documents")
+    else:
+        app.logger.info("Invalid input: documents must be a dictionary or a list of dictionaries")
+    
+    return "done with mongo"
+
+
+@app.route('/qmongo')
+def run_mongodb_query():
+    # Connect to MongoDB
+    client = MongoClient('mongodb://mongodb:27017')
+    
+    # Access the specified database and collection
+       # Access the database
+    db = client["my_db"]
+
+    # Create a collection
+    collection = db["users"]
+    
+    # Execute the query
+    result = collection.find({ 'name': 'Bob' })
+    app.logger.info(result)
+    
+    # Close the MongoDB connection
+    client.close()
+
+    return result
 
 
 

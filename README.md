@@ -59,6 +59,43 @@ spec:
       nodePort: 32000
 ```
 
+### Ingress
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+  - host: example.com # remeber to set host in /etc/hosts locally!
+    http:
+      paths:
+      - path: /backend/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: servie-name
+            port:
+              number: 3000
+```
+
+
+### Mysql
+
+Forward port for local connection:
+```
+kubectl port-forward service/mysql 3306:3306
+```
+
+establish connection with mysql-shell:
+```
+mysqlsh --uri=root@127.0.0.1:3306
+```
+
+
 ### Outputs:
 
 Get url 
