@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-healthcheck
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mysql-healthcheck
+            image: mysql:latest  # Replace with your MySQL health check image
+            env:
+            - name: MYSQL_HOST
+              value: mysql  # Replace with your MySQL service name
+            - name: MYSQL_PORT
+              value: "3306"  # Replace with your MySQL port number
+            - name: MYSQL_USER
+              value: root  # Replace with your MySQL username
+            - name: MYSQL_PASSWORD
+              value: mysecretpassword  # Replace with your MySQL password
+            command: ["/bin/sh", "-c"]
+            args:
+            - "echo init healthcheck for myslql db"
+            - "mysql --version"
+            - mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1" >/dev/null 2>&1
+          restartPolicy: OnFailure

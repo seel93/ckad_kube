@@ -149,7 +149,7 @@ def create_collection():
 def run_mongodb_query():
     # Connect to MongoDB
     client = MongoClient('mongodb://mongodb:27017')
-    
+    app.logger.info("init client")
     # Access the specified database and collection
        # Access the database
     db = client["my_db"]
