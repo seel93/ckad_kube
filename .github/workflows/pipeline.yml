@@ -45,7 +45,7 @@ jobs:
       - name: Run Datree Policy Check
         uses: datreeio/action-datree@main
         with:
-          path: '**/*.yaml'
+          path: '**/*.yml'
           cliArguments: '--only-k8s-files'
   Minikube:
     runs-on: ubuntu-latest
