@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
+import os
 from logging.config import dictConfig
 import mysql.connector
 from pymongo import MongoClient
@@ -11,20 +12,22 @@ config = {
 }
 
 
-cnx = mysql.connector.connect(**config)
-cursor = cnx.cursor()
+try:
+    cnx = mysql.connector.connect(**config)
+    cursor = cnx.cursor()
+    # Example query
+    query = "SHOW TABLES"
+    cursor.execute(query)
+    # Print results
+    for result in cursor:
+        print(result)
 
-# Example query
-query = "SHOW TABLES"
-cursor.execute(query)
+    # Clean up
+    cursor.close()
+    cnx.close()
+except Error as e:
+    print(e)
 
-# Print results
-for result in cursor:
-    print(result)
-
-# Clean up
-cursor.close()
-cnx.close()
 
 dictConfig({
     'version': 1,
@@ -85,7 +88,6 @@ def db_health_check():
         return "Database is not healthy: {}".format(err)
 
 
-
 @app.route('/query')
 def get_customer_by_id():
     # Establish a connection to the MySQL server
@@ -116,13 +118,11 @@ def create_collection():
     # Create a MongoClient instance
     client = MongoClient('mongodb://mongodb:27017')
 
-
     # Access the database
     db = client["my_db"]
 
     # Create a collection
     collection = db["users"]
-
 
     documents = [
         {"name": "Jane", "age": 25, "email": "jane@example.com"},
@@ -136,12 +136,12 @@ def create_collection():
         result = collection.insert_one(documents)
         app.logger.info("Inserted document with ID:", result.inserted_id)
     elif isinstance(documents, list):
-        # Insert multiple documents
-        result = collection.insert_many(documents)
+        from flask import Flask, jsonify
         app.logger.info("Inserted", len(result.inserted_ids), "documents")
     else:
-        app.logger.info("Invalid input: documents must be a dictionary or a list of dictionaries")
-    
+        app.logger.info(
+            "Invalid input: documents must be a dictionary or a list of dictionaries")
+
     return "done with mongo"
 
 
@@ -151,21 +151,46 @@ def run_mongodb_query():
     client = MongoClient('mongodb://mongodb:27017')
     app.logger.info("init client")
     # Access the specified database and collection
-       # Access the database
+    # Access the database
     db = client["my_db"]
 
     # Create a collection
     collection = db["users"]
-    
+
     # Execute the query
-    result = collection.find({ 'name': 'Bob' })
+    result = collection.find({'name': 'Bob'})
     app.logger.info(result)
-    
+
     # Close the MongoDB connection
     client.close()
 
     return result
 
+
+@app.route('/listdir/<path:dir_path>', methods=['GET'])
+def list_directory_contents(dir_path):
+    try:
+        # Note: be careful here. Allowing users to specify arbitrary directory
+        # paths can be a security risk. You may want to add checks to make sure
+        # they can only access directories they should be able to.
+        files = os.listdir(dir_path)
+        pwd = os.listdir(os.getcwd())
+        files_in_directory = os.listdir(os.getcwd())
+        return jsonify(files)
+    except FileNotFoundError:
+        return jsonify({
+            "ls": f"{list(files_in_directory)}",
+            "pwd": f"{pwd}",    
+            "error": f"The directory {dir_path} does not exist."
+        }), 404
+    except NotADirectoryError:
+        return jsonify({
+            "ls": f"{list(files_in_directory)}",
+            "pwd": f"{pwd}",
+            "error": f"{dir_path} is not a directory."
+        }), 400
+    except PermissionError:
+        return jsonify({"error": f"You do not have permissions to access the directory {dir_path}."}), 403
 
 
 if __name__ == "__main__":
